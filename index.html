@@ -956,7 +956,7 @@ function showSuccess(bref,saved,occ,req,date,time,guests){
         selR.addr+', '+selR.city+'<br>'+
         date+' at '+time+'  &bull;  '+guests+' Guest'+(parseInt(guests)>1?'s':'')+'<br>'+
         (occ?occ+'<br>':'')+(req?req+'<br>':'')+(selR.contact?selR.contact:'')+'</div>'+
-      (saved?'<div class="succ-save">Saved to your reservations sheet</div>':'')+
+      (saved?'<div class="succ-save">Thank You, Your booking is confirmed!</div>':'')+
       '<a class="succ-map" href="'+selR.map+'" target="_blank">&#9656; View on Google Maps</a>'+
       '<div class="succ-btns" style="margin-top:16px">'+
         '<button class="dbtn" onclick="closeModal()">Close</button>'+
