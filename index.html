@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ontrip Eat-In</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#3d5098;--brand-light:#4e65b8;--brand-dark:#2a3a6e;
+  --gold:#f5a623;--gold-light:#ffc04a;--green:#16a34a;
+  --white:#ffffff;--off:#f7f8fc;--text:#1a1e2e;--muted:#6b7280;--border:#e5e8f0;
+}
+html,body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+.hdr{background:var(--brand);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(61,80,152,.3)}
+.logo-wrap{display:flex;align-items:center;gap:12px}
+.logo-svg{width:38px;height:38px;border-radius:9px;flex-shrink:0}
+.app-name{display:flex;flex-direction:column;line-height:1.15}
+.app-name .name{font-family:'Fraunces',serif;font-size:16px;color:#fff;font-weight:600}
+.app-name .tag{font-size:9px;color:rgba(255,255,255,.5);letter-spacing:1.8px;text-transform:uppercase}
+.city-sel{background:rgba(255,255,255,.13);border:.5px solid rgba(255,255,255,.25);border-radius:20px;padding:6px 30px 6px 14px;color:#fff;font-size:12px;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.city-sel option{color:var(--text);background:#fff}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--brand-dark) 0%,var(--brand) 55%,var(--brand-light) 100%);padding:32px 24px 28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.04)}
+.hero::after{content:'';position:absolute;left:55%;bottom:-40px;width:180px;height:180px;border-radius:50%;background:rgba(245,166,35,.07)}
+.hero-inner{position:relative;z-index:1;max-width:600px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,166,35,.2);border:.5px solid rgba(245,166,35,.4);border-radius:20px;padding:4px 13px;font-size:11px;color:var(--gold-light);font-weight:600;letter-spacing:.5px;margin-bottom:12px}
+.hero h1{font-family:'Fraunces',serif;font-size:28px;color:#fff;line-height:1.25;margin-bottom:6px}
+.hero h1 em{color:var(--gold-light);font-style:italic}
+.hero p{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px}
+.sbar{display:flex;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.18);max-width:520px}
+.sbar input{flex:1;padding:13px 16px;border:none;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);outline:none}
+.sbar input::placeholder{color:#b0b7c9}
+.sbar button{background:var(--gold);border:none;padding:0 22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.sbar button:hover{background:#e09510}
+.sbar button svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round}
+
+/* PILLS */
+.pills-row{display:flex;gap:7px;padding:12px 20px;overflow-x:auto;scrollbar-width:none;background:#fff;border-bottom:1px solid var(--border)}
+.pills-row::-webkit-scrollbar{display:none}
+.pill{padding:6px 15px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap;cursor:pointer;border:1px solid var(--border);background:var(--off);color:var(--muted);transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif}
+.pill.on,.pill:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+
+/* TABS */
+.tabs-row{display:flex;background:#fff;border-bottom:1px solid var(--border);padding:0 20px}
+.tab{padding:12px 20px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand)}
+
+/* MAIN */
+.main{padding:16px 20px 80px;max-width:1100px;margin:0 auto}
+.sec-lbl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:2rem}
+.card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(61,80,152,.13);border-color:var(--brand)}
+.cthumb{height:120px;display:flex;align-items:center;justify-content:center;font-size:42px;position:relative}
+.cbadge{position:absolute;top:8px;left:8px;font-size:10px;padding:3px 9px;border-radius:20px;font-weight:700;letter-spacing:.3px;color:#fff}
+.cbadge.veg{background:#16a34a}.cbadge.nveg{background:#dc2626}
+.crating{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.93);border-radius:20px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:3px;box-shadow:0 1px 6px rgba(0,0,0,.1)}
+.crating .star{color:#f59e0b}
+.cbody{padding:10px 13px 0}
+.cname{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ccui{font-size:11px;color:var(--muted);margin-bottom:3px}
+.cloc{font-size:11px;color:var(--brand);display:flex;align-items:center;gap:3px;margin-bottom:6px}
+.cprice{font-size:12px;font-weight:600;color:var(--text)}
+.cfoot{border-top:1px solid var(--border);padding:8px 13px;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.bkbtn{background:var(--brand);color:#fff;border:none;border-radius:8px;padding:6px 16px;font-size:12px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:background .15s}
+.bkbtn:hover{background:var(--brand-dark)}
+.maplink{font-size:11px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:3px}
+.maplink:hover{color:var(--brand)}
+.maplink svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.empty{text-align:center;padding:4rem 1rem;color:var(--muted);font-size:14px}
+
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(10,14,40,.65);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;z-index:400;padding:0}
+@media(min-width:560px){.ov{align-items:center;padding:20px}}
+.mod{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;animation:slideUp .22s ease-out}
+@media(min-width:560px){.mod{border-radius:20px;max-height:90vh}}
+@keyframes slideUp{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mhdr{padding:20px 20px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:10;border-radius:22px 22px 0 0}
+@media(min-width:560px){.mhdr{border-radius:20px 20px 0 0}}
+.mrest-name{font-family:'Fraunces',serif;font-size:19px;font-weight:600;color:var(--text);margin-bottom:3px}
+.mrest-sub{font-size:12px;color:var(--muted)}
+.xbtn{background:var(--off);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:17px;color:var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.xbtn:hover{background:var(--border)}
+.mbody{padding:20px}
+.minfo-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.mchip{background:var(--off);border:1px solid var(--border);border-radius:9px;padding:7px 13px;font-size:11px;font-weight:500;color:var(--muted)}
+.mchip strong{color:var(--text);display:block;font-size:12px;margin-bottom:1px}
+.map-cta{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--brand);font-weight:500;text-decoration:none;margin-bottom:16px}
+.map-cta:hover{text-decoration:underline}
+.map-cta svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.divider{height:1px;background:var(--border);margin:16px 0}
+.form-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:14px;color:var(--text)}
+.fg{margin-bottom:13px}
+.fl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.3px;margin-bottom:5px;display:block;text-transform:uppercase}
+.fi{width:100%;padding:10px 13px;border-radius:9px;border:1px solid var(--border);font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);outline:none;background:var(--off);transition:border-color .15s}
+.fi:focus{border-color:var(--brand);background:#fff}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sbtn{width:100%;padding:14px;background:var(--brand);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;margin-top:6px;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.sbtn:hover{background:var(--brand-dark)}
+.sbtn:disabled{background:#c9cfe0;cursor:not-allowed}
+.notice{background:#fffbeb;border:1px solid #fde68a;border-radius:9px;padding:11px 14px;font-size:12px;color:#92400e;margin-bottom:14px;line-height:1.65}
+.succ{text-align:center;padding:2rem 1.5rem}
+.succ-ico{width:68px;height:68px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:30px}
+.succ-title{font-family:'Fraunces',serif;font-size:22px;margin-bottom:6px;color:var(--text)}
+.succ-ref{display:inline-block;font-size:12px;background:var(--off);border:1px solid var(--border);border-radius:8px;padding:7px 18px;font-weight:700;letter-spacing:1.2px;color:var(--brand);margin:8px 0 14px}
+.succ-details{font-size:13px;color:var(--muted);line-height:1.8;background:var(--off);border-radius:10px;padding:14px 16px;text-align:left;margin-bottom:16px}
+.succ-details strong{color:var(--text)}
+.succ-save{font-size:12px;color:var(--green);font-weight:600;margin-bottom:12px}
+.succ-warn{font-size:11px;color:var(--muted);margin-bottom:12px}
+.succ-map{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--brand);font-weight:500;text-decoration:none;margin-bottom:16px}
+.succ-map:hover{text-decoration:underline}
+.dbtn{width:100%;padding:12px;background:#111;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer}
+.dbtn:hover{background:#333}
+
+@media(max-width:480px){
+  .frow{grid-template-columns:1fr}
+  .hero h1{font-size:22px}
+  .grid{grid-template-columns:1fr}
+  .hdr{padding:0 14px}
+  .main{padding:14px 14px 80px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="logo-wrap">
+    <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="20" fill="#3d5098"/>
+      <path d="M20 58 Q50 90 80 58" stroke="#ffffff" stroke-width="13" stroke-linecap="round" fill="none"/>
+      <circle cx="30" cy="34" r="10" fill="#f5a623"/>
+      <path d="M60 30 Q72 22 84 30" stroke="#ffffff" stroke-width="7" stroke-linecap="round" fill="none"/>
+    </svg>
+    <div class="app-name">
+      <span class="name">Ontrip Eat-In</span>
+      <span class="tag">Thailand's finest tables</span>
+    </div>
+  </div>
+  <select class="city-sel" id="city-sel" onchange="setCity(this.value)">
+    <option value="All">📍 All Cities</option>
+    <option value="Bangkok">Bangkok</option>
+    <option value="Phuket">Phuket</option>
+    <option value="Chiang Mai">Chiang Mai</option>
+    <option value="Pattaya">Pattaya</option>
+    <option value="Koh Samui">Koh Samui</option>
+    <option value="Hua Hin">Hua Hin</option>
+  </select>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🇹🇭 Thailand</div>
+    <h1>Dine like you <em>belong here</em></h1>
+    <p>Reserve a table at the best restaurants across Thailand — instantly</p>
+    <div class="sbar">
+      <input id="q" type="text" placeholder="Search restaurant, cuisine, city…" oninput="doFilter()"/>
+      <button onclick="doFilter()">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- PILLS -->
+<div class="pills-row" id="pills-row"></div>
+
+<!-- TABS -->
+<div class="tabs-row">
+  <button class="tab on" onclick="setTab('All',this)">All Restaurants</button>
+  <button class="tab" onclick="setTab('Indian',this)">🍛 Indian</button>
+  <button class="tab" onclick="setTab('International',this)">🌍 Thai / International</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="sec-lbl" id="sec-lbl"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="ov" id="modal" style="display:none" onclick="bgClick(event)">
+  <div class="mod" onclick="event.stopPropagation()">
+    <div class="mhdr">
+      <div>
+        <div class="mrest-name" id="m-name"></div>
+        <div class="mrest-sub" id="m-sub"></div>
+      </div>
+      <button class="xbtn" onclick="closeModal()">&#x2715;</button>
+    </div>
+    <div class="mbody" id="m-body"></div>
+  </div>
+</div>
+
+<script>
+// ── PASTE YOUR GOOGLE APPS SCRIPT URL BELOW ──
+var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzApUhiBAARP7y17Hxrm35WxWlXm4IyTuT7GEWm8qJTOxptnDEY0AkwzLl1w7C3mhzELA/exec";
+// ────────────────────────────────────────────
+
+var INDIAN = [
+  {name:"Charcoal Tandoor Grill",city:"Bangkok",addr:"5/F, Fraser Suites Sukhumvit, 38/8 Sukhumvit Road",price:"THB 1,250-1,500 / person",contact:"+66 2 038 5112",rating:4.6,map:"https://www.google.com/maps/search/?api=1&query=Charcoal+Tandoor+Grill+%26+Mixology+Bangkok",cuisine:"North Indian / Grill",veg:false},
+  {name:"Daryaganj",city:"Bangkok",addr:"Park Plaza, 9 Sukhumvit 18, Khlong Toei",price:"THB 250-500 / dish",contact:"+66 2 658 7077",rating:4.7,map:"https://www.google.com/maps/search/?api=1&query=Daryaganj+Bangkok",cuisine:"Indian",veg:false},
+  {name:"Haoma",city:"Bangkok",addr:"231, 3 Soi Sukhumvit 31, Khlong Toei Nuea",price:"THB 2,590-3,500++ / person",contact:"+66 92 981 8222",rating:4.6,map:"https://www.google.com/maps/search/?api=1&query=Haoma+Bangkok",cuisine:"Modern Indian",veg:false},
+  {name:"Al Rahaman",city:"Bangkok",addr:"92/4 Phuttha Osot Alley, Si Phraya",price:"THB 200-300 / dish",contact:"+66 85 140 1440",rating:4.6,map:"https://www.google.com/maps/search/?api=1&query=Al+Rahaman+Restaurant+Bangkok",cuisine:"Indian / Halal",veg:false},
+  {name:"Gaa",city:"Bangkok",addr:"46 Sukhumvit 53 Alley, Khlong Tan Nuea",price:"THB 4,700++ (Tasting Menu)",contact:"+66 63 987 4747",rating:4.4,map:"https://www.google.com/maps/search/?api=1&query=Gaa+Bangkok",cuisine:"Modern Indian",veg:false},
+  {name:"Sri Ganesha",city:"Bangkok",addr:"Ground Floor, Sukhumvit Suites",price:"THB 100-150 / plate",contact:null,rating:4.5,map:"https://www.google.com/maps/search/?api=1&query=Sri+Ganesha+Restaurant+Bangkok",cuisine:"South Indian",veg:true},
+  {name:"Live India Indian Restaurant",city:"Phuket",addr:"Cape Panwa, Phuket",price:"THB 300-500 / person",contact:null,rating:4.8,map:"https://www.google.com/maps/search/?api=1&query=Live+India+Indian+Restaurant+Phuket",cuisine:"Indian",veg:false},
+  {name:"Baluchi",city:"Phuket",addr:"Horizon Karon Beach Resort & Spa",price:"THB 800-1,200 / person",contact:null,rating:4.5,map:"https://www.google.com/maps/search/?api=1&query=Baluchi+Phuket",cuisine:"North Indian",veg:false},
+  {name:"Tandoori Flames",city:"Phuket",addr:"Patong Beach, Phuket",price:"THB 400-800 / person",contact:null,rating:4.4,map:"https://www.google.com/maps/search/?api=1&query=Tandoori+Flames+Phuket",cuisine:"Indian / Tandoori",veg:false},
+  {name:"Soul Curry",city:"Phuket",addr:"Kata Beach, Phuket",price:"THB 250-600 / person",contact:null,rating:4.6,map:"https://www.google.com/maps/search/?api=1&query=Soul+Curry+Phuket",cuisine:"Indian Curry",veg:false},
+  {name:"Bollywood Phuket Restaurant & Bar",city:"Phuket",addr:"Phuket Town",price:"THB 500-900 / person",contact:null,rating:4.7,map:"https://www.google.com/maps/search/?api=1&query=Bollywood+Phuket+Restaurant",cuisine:"Indian",veg:false},
+  {name:"Rajdarbar Indian Restaurant",city:"Chiang Mai",addr:"99/2 Loi Kroh Rd, Chiang Mai",price:"THB 300-600 / person",contact:"+66 53 273 632",rating:4.5,map:"https://www.google.com/maps/search/?api=1&query=Rajdarbar+Indian+Restaurant+Chiang+Mai",cuisine:"Indian",veg:false},
+  {name:"Ali Baba Tandoori & Curry",city:"Pattaya",addr:"1/13-14 Pattaya Klang Rd",price:"THB 400-800 / person",contact:"+66 38 361 620",rating:4.4,map:"https://www.google.com/maps/search/?api=1&query=Ali+Baba+Tandoori+Pattaya",cuisine:"Indian / Tandoori",veg:false},
+  {name:"Babu's Indian Hot",city:"Koh Samui",addr:"14/23 Moo 4, Bophut, Koh Samui",price:"THB 250-500 / person",contact:"+66 84 440 2163",rating:4.6,map:"https://www.google.com/maps/search/?api=1&query=Babus+Indian+Hot+Koh+Samui",cuisine:"Indian",veg:false},
+  {name:"Siva Indian Restaurant",city:"Hua Hin",addr:"17/1 Naresdamri Rd, Hua Hin",price:"THB 300-600 / person",contact:"+66 32 511 873",rating:4.3,map:"https://www.google.com/maps/search/?api=1&query=Siva+Indian+Restaurant+Hua+Hin",cuisine:"Indian",veg:false},
+  {name:"Hinlay Curry House",city:"Chiang Mai",addr:"8/1 Wat Ket, Chiang Mai",price:"THB 200-400 / person",contact:"+66 53 242 621",rating:4.5,map:"https://www.google.com/maps/search/?api=1&query=Hinlay+Curry+House+Chiang+Mai",cuisine:"Indian Curry",veg:true}
+];
+
+var INTL = [
+  {name:"Suhring",cuisine:"German",city:"Bangkok",addr:"10 Yen Akat Rd, Yan Nawa, Bangkok",price:"THB 5,000 / person",contact:null,rating:4.8,map:"https://maps.google.com/?q=Suhring+Bangkok",veg:false},
+  {name:"Le Normandie by Alain Roux",cuisine:"French",city:"Bangkok",addr:"Mandarin Oriental, 48 Oriental Ave, Bangkok",price:"THB 6,000 / person",contact:null,rating:4.7,map:"https://maps.google.com/?q=Le+Normandie+Bangkok",veg:false},
+  {name:"Jay Fai",cuisine:"Thai",city:"Bangkok",addr:"327 Maha Chai Rd, Phra Nakhon, Bangkok",price:"THB 1,500 / person",contact:null,rating:4.3,map:"https://maps.google.com/?q=Jay+Fai+Bangkok",veg:false},
+  {name:"Mezzaluna",cuisine:"French / Japanese",city:"Bangkok",addr:"65th Floor, State Tower, Silom, Bangkok",price:"THB 7,000 / person",contact:null,rating:4.6,map:"https://maps.google.com/?q=Mezzaluna+Bangkok",veg:false},
+  {name:"R-Haan",cuisine:"Thai",city:"Bangkok",addr:"131 Thong Lo 9, Watthana, Bangkok",price:"THB 4,000 / person",contact:null,rating:4.5,map:"https://maps.google.com/?q=R-Haan+Bangkok",veg:false},
+  {name:"Blue Elephant",cuisine:"Thai",city:"Phuket",addr:"96 Krabi Road, Talad Neua, Phuket Town",price:"THB 1,500 / person",contact:null,rating:4.5,map:"https://maps.google.com/?q=Blue+Elephant+Phuket",veg:false},
+  {name:"Mom Tri's Kitchen",cuisine:"Thai / Seafood",city:"Phuket",addr:"12 Kata Noi Road, Kata Beach, Phuket",price:"THB 2,500 / person",contact:null,rating:4.6,map:"https://maps.google.com/?q=Mom+Tris+Kitchen+Phuket",veg:false},
+  {name:"Acqua Restaurant",cuisine:"Italian",city:"Phuket",addr:"324/15 Prabaramee Road, Kalim Beach, Patong",price:"THB 3,000 / person",contact:null,rating:4.7,map:"https://maps.google.com/?q=Acqua+Restaurant+Phuket",veg:false},
+  {name:"L'Arome by the Sea",cuisine:"Modern French",city:"Phuket",addr:"247/5 Prabaramee Road, Kalim, Phuket",price:"THB 4,000 / person",contact:null,rating:4.8,map:"https://maps.google.com/?q=LArome+by+the+Sea+Phuket",veg:false},
+  {name:"Suay Restaurant",cuisine:"Thai / Fusion",city:"Phuket",addr:"50/2 Takuapa Road, Talad Nua, Phuket Town",price:"THB 1,000 / person",contact:null,rating:4.6,map:"https://maps.google.com/?q=Suay+Restaurant+Phuket",veg:true},
+  {name:"David's Kitchen",cuisine:"French / European",city:"Chiang Mai",addr:"113 Bamrungrad Rd, Wat Ket, Chiang Mai",price:"THB 2,000 / person",contact:null,rating:4.8,map:"https://maps.google.com/?q=Davids+Kitchen+Chiang+Mai",veg:false},
+  {name:"The Service 1921",cuisine:"Asian / Western",city:"Chiang Mai",addr:"340 Charoen Prathet Rd, Chang Khlan, Chiang Mai",price:"THB 1,500 / person",contact:null,rating:4.6,map:"https://maps.google.com/?q=The+Service+1921+Chiang+Mai",veg:false},
+  {name:"Cafe des Amis Fine Dining",cuisine:"French / International",city:"Pattaya",addr:"391/6 Moo 10, Thappraya Road Soi 11, Pattaya",price:"THB 2,500 / person",contact:null,rating:4.7,map:"https://maps.google.com/?q=Cafe+des+Amis+Pattaya",veg:false},
+  {name:"The Glass House",cuisine:"Thai / Seafood",city:"Pattaya",addr:"5/22 Moo 2, Na Jomtien, Pattaya",price:"THB 1,200 / person",contact:null,rating:4.5,map:"https://maps.google.com/?q=The+Glass+House+Pattaya",veg:false},
+  {name:"Dining on the Rocks",cuisine:"Modern / Fusion",city:"Koh Samui",addr:"9/10 Moo 5, Baan Plai Laem, Bophut, Koh Samui",price:"THB 4,500 / person",contact:null,rating:4.8,map:"https://maps.google.com/?q=Dining+on+the+Rocks+Koh+Samui",veg:false},
+  {name:"By Hand Pizza Cafe",cuisine:"Italian",city:"Chiang Mai",addr:"25 Moon Muang Rd Soi 7, Chiang Mai",price:"THB 300 / person",contact:null,rating:4.6,map:"https://maps.google.com/?q=By+Hand+Pizza+Cafe+Chiang+Mai",veg:true},
+  {name:"Prime Burger",cuisine:"American",city:"Pattaya",addr:"Pattaya Sai Song Rd, Pattaya",price:"THB 250 / person",contact:null,rating:4.7,map:"https://maps.google.com/?q=Prime+Burger+Pattaya",veg:false},
+  {name:"Father Ted's Irish Pub",cuisine:"Irish",city:"Hua Hin",addr:"19 Damnernkasem Road, Hua Hin",price:"THB 400 / person",contact:null,rating:4.5,map:"https://maps.google.com/?q=Father+Teds+Hua+Hin",veg:false},
+  {name:"Salsa Kitchen",cuisine:"Mexican",city:"Chiang Mai",addr:"26/4 Huay Kaew Rd, Chiang Mai",price:"THB 250 / person",contact:null,rating:4.4,map:"https://maps.google.com/?q=Salsa+Kitchen+Chiang+Mai",veg:true},
+  {name:"Bronx Pizza",cuisine:"Italian",city:"Pattaya",addr:"Soi LK Metro, Pattaya",price:"THB 150 / person",contact:null,rating:4.6,map:"https://maps.google.com/?q=Bronx+Pizza+Pattaya",veg:false}
+];
+
+var ALL = INDIAN.map(function(r,i){return Object.assign({},r,{id:"I"+i,cat:"Indian"});})
+         .concat(INTL.map(function(r,i){return Object.assign({},r,{id:"T"+i,cat:"International"});}));
+
+var BG=["#fdf2e9","#eaf4fb","#eafaf1","#fdf9e3","#f4ecf7","#e8f8f5","#fef9e7","#eaf7fb","#fce4ec","#e8eaf6"];
+var EMO={"Indian":["🍛","🥘","🫕","🍲","🫓"],"North Indian":["🍛","🥘","🫕","🍲"],"South Indian":["🥗","🍚","🥥","🍛"],"Modern Indian":["🍽️","✨","🥘"],"Indian Curry":["🍛","🌶️","🥘"],"Indian / Halal":["🍛","🥙","🌿"],"Indian / Tandoori":["🍗","🔥","🫓"],"Thai":["🍜","🌶️","🥢","🍤"],"German":["🥩","🍺","🥨"],"French":["🥐","🍷","🧀"],"Italian":["🍕","🍝","🫙"],"Mexican":["🌮","🌯","🫔"],"American":["🍔","🍟","🥓"],"Irish":["🍺","🥩","🫘"],"default":["🍽️","🌿","🥗","🍷","🌮"]};
+
+function hash(s,n){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))%n;return h;}
+function getEmoji(c,n){var keys=Object.keys(EMO);var k=keys.find(function(k){return c&&c.startsWith(k);})||"default";var p=EMO[k];return p[hash(n,p.length)];}
+function getBg(n){return BG[hash(n,BG.length)];}
+function mkRef(){return "OEI-"+Math.random().toString(36).substr(2,6).toUpperCase();}
+function today(){return new Date().toISOString().split("T")[0];}
+
+var activeTab="All",activeCity="All",activeCuisine="All",selR=null;
+
+function buildPills(){
+  var cuisines=Array.from(new Set(ALL.map(function(r){return r.cuisine;}))).sort();
+  document.getElementById("pills-row").innerHTML=["All"].concat(cuisines).map(function(c){
+    return '<button class="pill '+(c==="All"?"on":"")+'" onclick="setCuisine(\''+c.replace(/'/g,"\\'").replace(/&/g,"and")+'\',this)">'+c+"</button>";
+  }).join("");
+}
+
+function setTab(t,el){activeTab=t;document.querySelectorAll(".tab").forEach(function(b){b.classList.remove("on");});el.classList.add("on");doFilter();}
+function setCity(v){activeCity=v;doFilter();}
+function setCuisine(c,el){activeCuisine=c;document.querySelectorAll(".pill").forEach(function(b){b.classList.remove("on");});el.classList.add("on");doFilter();}
+
+function doFilter(){
+  var q=(document.getElementById("q").value||"").toLowerCase();
+  var filtered=ALL.filter(function(r){
+    return (activeTab==="All"||r.cat===activeTab)&&
+           (activeCity==="All"||r.city===activeCity)&&
+           (activeCuisine==="All"||r.cuisine===activeCuisine)&&
+           (!q||r.name.toLowerCase().includes(q)||r.cuisine.toLowerCase().includes(q)||r.city.toLowerCase().includes(q)||r.addr.toLowerCase().includes(q));
+  });
+  renderGrid(filtered);
+}
+
+function renderGrid(list){
+  document.getElementById("sec-lbl").textContent=list.length+" restaurant"+(list.length!==1?"s":"")+" found";
+  if(!list.length){document.getElementById("grid").innerHTML='<div class="empty" style="grid-column:1/-1">No restaurants match. Try adjusting your search or filters.</div>';return;}
+  document.getElementById("grid").innerHTML=list.map(function(r){
+    return '<div class="card" onclick="openBook(\''+r.id+'\')">'+
+      '<div class="cthumb" style="background:'+getBg(r.name)+'">'+
+        '<span style="font-size:42px">'+getEmoji(r.cuisine,r.name)+'</span>'+
+        '<span class="cbadge '+(r.veg?"veg":"nveg")+'">'+(r.veg?"&#9679; VEG":"&#9679; NON-VEG")+'</span>'+
+        '<div class="crating"><span class="star">&#9733;</span> '+r.rating.toFixed(1)+'</div>'+
+      '</div>'+
+      '<div class="cbody">'+
+        '<div class="cname">'+r.name+'</div>'+
+        '<div class="ccui">'+r.cuisine+'</div>'+
+        '<div class="cloc"><svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg> '+r.city+'</div>'+
+        '<div class="cprice">'+r.price+'</div>'+
+      '</div>'+
+      '<div class="cfoot">'+
+        '<a class="maplink" href="'+r.map+'" target="_blank" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg> View on map</a>'+
+        '<button class="bkbtn" onclick="event.stopPropagation();openBook(\''+r.id+'\')">Reserve Table</button>'+
+      '</div>'+
+    '</div>';
+  }).join("");
+}
+
+function openBook(id){
+  selR=ALL.find(function(r){return r.id===id;});
+  document.getElementById("m-name").textContent=selR.name;
+  document.getElementById("m-sub").textContent=selR.cuisine+" · "+selR.city;
+  document.getElementById("m-body").innerHTML=buildForm();
+  document.getElementById("modal").style.display="flex";
+  document.getElementById("f-date").value=today();
+  document.body.style.overflow="hidden";
+}
+
+function buildForm(){
+  var needsUrl=(!APPS_SCRIPT_URL||APPS_SCRIPT_URL==="YOUR_APPS_SCRIPT_URL_HERE");
+  return (
+    '<div class="minfo-row">'+
+      '<div class="mchip"><strong>&#9733; '+selR.rating.toFixed(1)+'</strong>Rating</div>'+
+      '<div class="mchip"><strong>'+selR.city+'</strong>City</div>'+
+      '<div class="mchip"><strong>'+(selR.veg?"Pure Veg":"Non-Veg")+'</strong>Type</div>'+
+      (selR.contact?'<div class="mchip"><strong>'+selR.contact+'</strong>Contact</div>':'')+
+    '</div>'+
+    '<a class="map-cta" href="'+selR.map+'" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>'+selR.addr+' - Open in Maps</a>'+
+    '<div class="divider"></div>'+
+    '<div class="form-title">Reserve your table</div>'+
+    (needsUrl?'<div class="notice">&#9888;&#65039; <strong>Setup needed:</strong> Open <code>index.html</code> and replace <code>YOUR_APPS_SCRIPT_URL_HERE</code> with your Google Apps Script URL to save bookings to Google Sheets.</div>':'')+
+    '<div class="fg"><label class="fl">Full name *</label><input class="fi" id="f-name" placeholder="Rahul Sharma"/></div>'+
+    '<div class="frow">'+
+      '<div class="fg"><label class="fl">Phone *</label><input class="fi" id="f-phone" placeholder="+91 98765 43210"/></div>'+
+      '<div class="fg"><label class="fl">Email</label><input class="fi" id="f-email" type="email" placeholder="you@email.com"/></div>'+
+    '</div>'+
+    '<div class="frow">'+
+      '<div class="fg"><label class="fl">Date *</label><input class="fi" id="f-date" type="date"/></div>'+
+      '<div class="fg"><label class="fl">Time</label>'+
+        '<select class="fi" id="f-time">'+
+          '<option>12:00 PM</option><option>12:30 PM</option><option>1:00 PM</option><option>1:30 PM</option>'+
+          '<option>7:00 PM</option><option>7:30 PM</option><option selected>8:00 PM</option>'+
+          '<option>8:30 PM</option><option>9:00 PM</option><option>9:30 PM</option>'+
+        '</select>'+
+      '</div>'+
+    '</div>'+
+    '<div class="frow">'+
+      '<div class="fg"><label class="fl">Guests</label>'+
+        '<select class="fi" id="f-guests"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8+</option></select>'+
+      '</div>'+
+      '<div class="fg"><label class="fl">Occasion</label>'+
+        '<select class="fi" id="f-occ"><option value="">None</option><option>Birthday</option><option>Anniversary</option><option>Business Dinner</option><option>Date Night</option><option>Family Gathering</option></select>'+
+      '</div>'+
+    '</div>'+
+    '<div class="fg"><label class="fl">Special Requests</label><input class="fi" id="f-req" placeholder="Window seat, dietary needs, cake..."/></div>'+
+    '<button class="sbtn" id="sub-btn" onclick="doSubmit()">Confirm Reservation</button>'
+  );
+}
+
+function doSubmit(){
+  var name=(document.getElementById("f-name").value||"").trim();
+  var phone=(document.getElementById("f-phone").value||"").trim();
+  var email=(document.getElementById("f-email").value||"").trim();
+  var date=document.getElementById("f-date").value;
+  var time=document.getElementById("f-time").value;
+  var guests=document.getElementById("f-guests").value;
+  var occ=document.getElementById("f-occ").value;
+  var req=(document.getElementById("f-req").value||"").trim();
+  if(!name||!phone||!date){alert("Please fill in Name, Phone and Date to continue.");return;}
+  var btn=document.getElementById("sub-btn");
+  btn.disabled=true;btn.textContent="Confirming...";
+  var bref=mkRef();
+  var payload={ref:bref,restaurant:selR.name,cuisine:selR.cuisine,city:selR.city,address:selR.addr,category:selR.cat,price:selR.price,name:name,phone:phone,email:email,date:date,time:time,guests:guests,occasion:occ,requests:req,timestamp:new Date().toLocaleString("en-IN")};
+  var saved=false;
+  var url=APPS_SCRIPT_URL;
+  if(url&&url!=="YOUR_APPS_SCRIPT_URL_HERE"){
+    fetch(url,{method:"POST",mode:"no-cors",body:JSON.stringify(payload)})
+      .then(function(){showSuccess(bref,true,occ,req,date,time,guests);})
+      .catch(function(){showSuccess(bref,false,occ,req,date,time,guests);});
+  } else {
+    showSuccess(bref,false,occ,req,date,time,guests);
+  }
+}
+
+function showSuccess(bref,saved,occ,req,date,time,guests){
+  document.getElementById("m-body").innerHTML=
+    '<div class="succ">'+
+      '<div class="succ-ico">&#127881;</div>'+
+      '<div class="succ-title">You\'re confirmed!</div>'+
+      '<div class="succ-ref">'+bref+'</div>'+
+      '<div class="succ-details">'+
+        '<strong>'+selR.name+'</strong><br>'+
+        '&#128205; '+selR.addr+', '+selR.city+'<br>'+
+        '&#128197; '+date+' at '+time+'<br>'+
+        '&#128101; '+guests+' guest'+(parseInt(guests)>1?'s':'')+'<br>'+
+        (occ?'&#127882; '+occ+'<br>':'')+
+        (req?'&#128221; '+req+'<br>':'')+
+        (selR.contact?'&#128222; '+selR.contact:'')+
+      '</div>'+
+      (saved?'<div class="succ-save">&#9989; Booking saved to Google Sheet</div>':'<div class="succ-warn">Configure your Apps Script URL in index.html to auto-save bookings.</div>')+
+      '<a class="succ-map" href="'+selR.map+'" target="_blank">&#128205; View on Google Maps</a><br><br>'+
+      '<button class="dbtn" onclick="closeModal()">Done</button>'+
+    '</div>';
+}
+
+function closeModal(){document.getElementById("modal").style.display="none";document.body.style.overflow="";}
+function bgClick(e){if(e.target===document.getElementById("modal"))closeModal();}
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal();});
+
+buildPills();
+doFilter();
+</script>
+</body>
+</html>
